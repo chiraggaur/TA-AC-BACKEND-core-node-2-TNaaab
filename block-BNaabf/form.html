@@ -6,18 +6,11 @@
     <title>form</title>
   </head>
   <body>
-    <!-- <p>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque
-      excepturi ducimus iure, delectus asperiores magnam possimus vero sequi,
-      illum soluta dolor repellendus et! Quidem earum fuga itaque. Itaque,
-      doloremque totam.
-    </p> -->
-    <form action="submit" method="get">
-      <input type="text" placeholder="firstname" />
-      <input type="text" placeholder="lastname" />
-      <input type="email" placeholder="email" />
-      <input type="submit" placeholder="submit data" id="submitbutton" />
+    <form action="/form" method="POST">
+      <input type="text" name="name" placeholder="name" />
+      <input type="text" name="age" placeholder="age" />
+      <input type="email" name="email" placeholder="email" />
+      <input type="submit" value="Add user" />
     </form>
-    <script src="server.js"></script>
   </body>
 </html>
