@@ -23,9 +23,9 @@
 
 // function handleRequest(req, res) {
 //   console.log(path.join(__filename));
-//   console.log(path.join(__dirname) + "/app.js");
+//   console.log(__dirname + "/app.js");
 //   console.log("./index.html");
-//   console.log(path.join(__dirname) + "/index.html");
+//   console.log(path.join(__dirname) ,"index.html");
 //   res.end();
 // }
 
@@ -65,8 +65,8 @@
 //       store += chunk;
 //     });
 //     req.on("end", () => {
-//       res.statusCode = 201; // header content type check doubt
-//       res.write(store);
+//       res.statusCode = 201;
+//       res.write(store); // already a stringify data because we can only send string or buffer data in http req
 //       res.end();
 //     });
 //   }
@@ -118,31 +118,35 @@
 //   - country
 //   - pin
 
-// let http = require("http");
-// let qs = require("querystring");
+let http = require("http");
+let qs = require("querystring");
 
-// let server = http.createServer(handleRequest);
+let server = http.createServer(handleRequest);
 
-// function handleRequest(req, res) {
-//   //   let dataform = req.headers["Content-Type"]; // doubt
-//   var store = "";
-//   if (req.method === "POST" && req.url === "/") {
-//     req.on("data", (chunk) => {
-//       store += chunk;
-//     });
-//     req.on("end", () => {
-//       //   res.statusCode = 201; // header content type check doubt
-//       //   res.setHeader("content-Type", "application/x-www-form-urlencoded");
-//       //   let parsedString = qs.parse(store);
-//       //   res.write(JSON.stringify(parsedString));
-//       res.end();
-//     });
-//   }
-// }
+function handleRequest(req, res) {
+  var store = "";
+  if (req.method === "POST" && req.url === "/") {
+    req.on("data", (chunk) => {
+      store += chunk;
+    });
+    req.on("end", () => {
+      if (req.headers["content-type"] === "application/json") {
+        let parseddata = JSON.parse(store);
+        res.write(store);
+        res.end();
+      }
+      if (req.headers["content-type"] === "application/x-www-form-urlencoded") {
+        let parseddata = qs.parse(store);
+        res.write(JSON.stringify(parseddata));
+        res.end();
+      }
+    });
+  }
+}
 
-// server.listen(9000, "localhost", () => {
-//   console.log("server is live ");
-// });
+server.listen(9000, "localhost", () => {
+  console.log("server is live ");
+});
 
 // Q. create server, send json data in request from postman, parse in on the server and send html response with entire parsed data information.
 
@@ -180,27 +184,27 @@
 // - Parse form-data using `querystring` module
 // - respond with HTML page containing only email from data in H2 tag.
 
-let http = require("http");
-let qs = require("querystring");
+// let http = require("http");
+// let qs = require("querystring");
 
-let server = http.createServer(handleRequest);
+// let server = http.createServer(handleRequest);
 
-function handleRequest(req, res) {
-  var store = "";
-  if (req.method === "POST" && req.url === "/form") {
-    req.on("data", (chunk) => {
-      store += chunk;
-    });
-    req.on("end", () => {
-      res.setHeader("content-Type", "text/html");
-      let parseddata = qs.parse(store);
-      let email = parseddata.email;
-      res.write(`<h2> ${email}</h2>`);
-      res.end();
-    });
-  }
-}
+// function handleRequest(req, res) {
+//   var store = "";
+//   if (req.method === "POST" && req.url === "/form") {
+//     req.on("data", (chunk) => {
+//       store += chunk;
+//     });
+//     req.on("end", () => {
+//       res.setHeader("content-Type", "text/html");
+//       let parseddata = qs.parse(store);
+//       let email = parseddata.email;
+//       res.write(`<h2> ${email}</h2>`);
+//       res.end();
+//     });
+//   }
+// }
 
-server.listen(9000, "localhost", () => {
-  console.log("server is live ");
-});
+// server.listen(9000, "localhost", () => {
+//   console.log("server is live ");
+// });
